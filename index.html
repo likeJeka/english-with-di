@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="description"
+      content="Online English lessons for students aged 16–35. Levels A1–C1. Individual and group classes."
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Online English Tutor</title>
+
+    <link rel="stylesheet" href="/style.css" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <!-- HEADER -->
+    <header class="site-header">
+      <div class="wrapper">
+        <h1 class="logo-text">
+          <a href="/">English with Di</a>
+        </h1>
+
+        <nav class="header-nav" aria-label="Primary">
+          <ul class="navigation">
+            <li><a href="#about">About</a></li>
+            <li><a href="#formats">Lessons</a></li>
+            <li><a href="#reviews">Reviews</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+
+          <button
+            class="btn header-btn header-cta"
+            type="button"
+            aria-haspopup="dialog"
+            id="openModal"
+          >
+            Book a lesson
+          </button>
+        </nav>
+
+        <button class="burger" aria-label="Open menu">☰</button>
+      </div>
+    </header>
+
+    <!-- MOBILE MENU -->
+    <nav class="mobile-menu" aria-label="Mobile navigation">
+      <button class="close-menu">✕</button>
+      <a href="#about">About</a>
+      <a href="#formats">Lessons</a>
+      <a href="#reviews">Reviews</a>
+      <a href="#contact">Contact</a>
+      <button class="btn mobile-btn" type="button">Book a lesson</button>
+    </nav>
+
+    <!-- HERO (FULL WIDTH) -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-inner">
+        <h2 id="hero-title">English lessons for real life</h2>
+        <p>
+          Online English for students aged 16–35. Levels A1–C1. Individual and
+          group lessons.
+        </p>
+        <button class="btn primary-btn" type="button">Start learning</button>
+      </div>
+    </section>
+
+    <!-- MAIN CONTENT -->
+    <main class="wrapper">
+      <!-- ABOUT -->
+      <section id="about" class="section" aria-labelledby="about-title">
+        <h2 id="about-title">About me</h2>
+        <p>
+          Hi! I’m Di — an online English tutor. I work with students from A1 to
+          C1 and help them speak confidently.
+        </p>
+      </section>
+
+      <!-- FORMATS -->
+      <section id="formats" class="section" aria-labelledby="formats-title">
+        <h2 id="formats-title">Lesson formats</h2>
+
+        <article class="format-card">
+          <h3>Individual lessons</h3>
+          <p>Personal plan, flexible schedule, full attention.</p>
+        </article>
+
+        <article class="format-card">
+          <h3>Group lessons</h3>
+          <p>Small groups, speaking practice, friendly atmosphere.</p>
+        </article>
+      </section>
+
+      <!-- PROCESS -->
+      <section class="section" aria-labelledby="process-title">
+        <h2 id="process-title">How it works</h2>
+        <ol>
+          <li>Free intro lesson</li>
+          <li>Level assessment</li>
+          <li>Personal study plan</li>
+          <li>Regular lessons & feedback</li>
+        </ol>
+      </section>
+
+      <!-- REVIEWS -->
+      <section id="reviews" class="section" aria-labelledby="reviews-title">
+        <h2 id="reviews-title">Student reviews</h2>
+
+        <article class="review">
+          <p>“I started speaking confidently after 2 months.”</p>
+          <span>— Maria, B1</span>
+        </article>
+      </section>
+
+      <!-- CONTACT -->
+      <section
+        id="contact"
+        class="section contact-section"
+        aria-labelledby="contact-title"
+      >
+        <div class="contact-box">
+          <h2 id="contact-title">Book a lesson</h2>
+
+          <form class="contact-form" novalidate>
+            <label>
+              Name
+              <input type="text" name="name" required />
+            </label>
+
+            <label>
+              Level
+              <select name="level" required>
+                <option value="">Choose level</option>
+                <option>A1</option>
+                <option>A2</option>
+                <option>B1</option>
+                <option>B2</option>
+                <option>C1</option>
+              </select>
+            </label>
+
+            <label>
+              Contact (Telegram / Email)
+              <input type="text" name="contact" required />
+            </label>
+
+            <button class="btn submit-btn" type="submit">Send request</button>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+      <div class="wrapper">
+        <address aria-label="Contacts">
+          <a href="mailto:english@example.com">english@example.com</a>
+          <a href="https://t.me/username">Telegram</a>
+          <a href="#">Instagram</a>
+          <a href="#">TikTok</a>
+        </address>
+
+        <p>© 2026 Online English Tutor</p>
+      </div>
+    </footer>
+
+    <!-- JS -->
+    <script src="modal.js" defer></script>
+    <script src="form.js" defer></script>
+    <script src="menu.js" defer></script>
+  </body>
+</html>
