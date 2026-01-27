@@ -1,0 +1,225 @@
+/* =====================
+   RESET + VARIABLES
+===================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #f7f9fc;
+  --card: #ffffff;
+
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+
+  --accent: #4f46e5;
+  --accent-hover: #4338ca;
+
+  --border: #e2e8f0;
+
+  --success: #16a34a;
+  --danger: #dc2626;
+
+  --radius: 16px;
+  --radius-sm: 10px;
+
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+  --transition: 0.25s ease;
+}
+
+/* =====================
+   BASE
+===================== */
+
+body {
+  margin: 0;
+  font-family: "Inter", system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text-main);
+}
+
+.dashboard {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 32px 20px 60px;
+}
+
+/* =====================
+   HEADER
+===================== */
+
+.top {
+  margin-bottom: 32px;
+}
+
+.top h1 {
+  font-size: clamp(28px, 5vw, 42px);
+  margin-bottom: 8px;
+}
+
+.alert {
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.hidden {
+  display: none;
+}
+
+/* =====================
+   CARDS
+===================== */
+
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 28px;
+  margin-bottom: 32px;
+  box-shadow: var(--shadow);
+}
+
+.card h3 {
+  margin-bottom: 20px;
+  font-size: 22px;
+}
+
+/* =====================
+   PAYMENT
+===================== */
+
+.payment-status {
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.payment-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 20px;
+}
+
+.label {
+  display: block;
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.total {
+  grid-column: 1 / -1;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  font-size: 18px;
+}
+
+/* =====================
+   TODAY BOX
+===================== */
+
+.today-box {
+  background: #eef2ff;
+  color: #3730a3;
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 32px;
+  font-weight: 500;
+}
+
+/* =====================
+   TABLE
+===================== */
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.schedule {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 420px;
+}
+
+.schedule th,
+.schedule td {
+  padding: 14px 12px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}
+
+.schedule th {
+  font-size: 14px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.schedule tr.past {
+  color: #94a3b8;
+}
+
+.schedule tr.next {
+  background: #f1f5ff;
+  font-weight: 600;
+}
+
+/* =====================
+   ACTIONS
+===================== */
+
+.actions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 14px 28px;
+  border-radius: var(--radius-sm);
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  transition: background var(--transition), transform var(--transition);
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.primary {
+  background: var(--accent);
+  color: #ffffff;
+}
+
+.primary:hover {
+  background: var(--accent-hover);
+}
+
+.secondary {
+  background: #e5e7eb;
+  color: #111827;
+}
+
+/* =====================
+   MOBILE
+===================== */
+
+@media (max-width: 600px) {
+  .dashboard {
+    padding: 24px 16px 48px;
+  }
+
+  .card {
+    padding: 22px;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}

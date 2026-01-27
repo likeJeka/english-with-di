@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin</title>
+</head>
+<body>
+
+  <h2>Student link</h2>
+
+  <input id="studentIdInput" placeholder="student id" />
+  <button id="copyLink">Copy student link</button>
+
+  <script>
+    document.getElementById('copyLink').onclick = () => {
+      const id = document.getElementById('studentIdInput').value.trim();
+      if (!id) return alert('Enter student id');
+
+      const link = `${location.origin}/student.html?id=${id}`;
+      navigator.clipboard.writeText(link);
+      alert('Link copied');
+    };
+  </script>
+  <script src="admin.js"></script>
+</body>
+</html>

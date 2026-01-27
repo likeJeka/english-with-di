@@ -27,6 +27,9 @@
 
   --transition: 0.25s ease;
 }
+html {
+  scroll-behavior: smooth;
+}
 
 /* =====================
    BASE
@@ -373,4 +376,51 @@ ol li {
   .header-cta {
     display: none;
   }
+}
+/* =====================
+   MODAL
+===================== */
+
+.modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.modal.hidden {
+  display: none;
+}
+
+.modal-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+}
+
+.modal-content {
+  position: relative;
+  background: var(--bg-soft);
+  padding: 40px;
+  border-radius: var(--radius);
+  width: 100%;
+  max-width: 420px;
+  box-shadow: var(--shadow);
+  z-index: 1;
+}
+
+.modal-content h2 {
+  margin-bottom: 24px;
+}
+
+.modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
 }

@@ -170,10 +170,47 @@
         <p>© 2026 Online English Tutor</p>
       </div>
     </footer>
+<!-- MODAL -->
+<div class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal-overlay" data-close></div>
+
+  <div class="modal-content">
+    <button class="modal-close" data-close>✕</button>
+
+    <h2 id="modal-title">Book a lesson</h2>
+
+    <form class="contact-form" novalidate>
+      <label>
+        Name
+        <input type="text" required />
+      </label>
+
+      <label>
+        Level
+        <select required>
+          <option value="">Choose level</option>
+          <option>A1</option>
+          <option>A2</option>
+          <option>B1</option>
+          <option>B2</option>
+          <option>C1</option>
+        </select>
+      </label>
+
+      <label>
+        Contact (Telegram / Email)
+        <input type="text" required />
+      </label>
+
+      <button class="btn primary-btn" type="submit">Send request</button>
+    </form>
+  </div>
+</div>
 
     <!-- JS -->
     <script src="modal.js" defer></script>
     <script src="form.js" defer></script>
     <script src="menu.js" defer></script>
+    <script src="/modal.js" defer></script>
   </body>
 </html>
