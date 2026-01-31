@@ -1,93 +1,153 @@
+/* =====================
+   GET STUDENT ID
+===================== */
+
 const params = new URLSearchParams(window.location.search);
 const studentId = params.get("id");
 
 if (!studentId) {
   document.body.innerHTML =
     '<p style="padding:40px">Your teacher will send you a personal dashboard link.</p>';
-  throw new Error("No id");
+  throw new Error("No student id");
 }
 
-// CSV URLs
+/* =====================
+   GOOGLE SHEETS (READ)
+   ⚠️ CSV links ONLY from "Publish to web"
+===================== */
 
-// lessons (расписание)
+// lessons (schedule)
 const LESSONS_URL =
   "https://docs.google.com/spreadsheets/d/e/2PACX-1vRKh8UhQOSw8u-nDvvyxZ0xpceiLisPvanrPhby6R6f_xFIazLbv4vJw-LtvVPpdknvtMDmhpdCvy8A/pub?gid=0&single=true&output=csv";
 
-// students_info (цены, имя)
+// students_info
 const STUDENTS_URL =
   "https://docs.google.com/spreadsheets/d/e/2PACX-1vRKh8UhQOSw8u-nDvvyxZ0xpceiLisPvanrPhby6R6f_xFIazLbv4vJw-LtvVPpdknvtMDmhpdCvy8A/pub?gid=1020253581&single=true&output=csv";
 
-// Google Form
-const FORM_URL =
-  "https://docs.google.com/forms/d/e/1FAIpQLSfAVMp3g6V72YFEpomaNk2nzgILxmRvAte03Bu74kRB-AwidQ/viewform";
+/* =====================
+   REQUEST API (WRITE)
+===================== */
 
-document.getElementById("rescheduleBtn").onclick = () =>
-  window.open(
-    `${FORM_URL}?entry.318781198=${studentId}&entry.2129731229=Reschedule`,
-    "_blank",
-  );
+const REQUEST_API_URL = "https://script.google.com/macros/s/AKfycbxB9_ncsflK8Ni0Py-PYPHz1J3rEPhCUmBFWeCltGea7pkbsX1T6bqeiuWLSShTIm5t/exec";
 
-document.getElementById("cancelBtn").onclick = () =>
-  window.open(
-    `${FORM_URL}?entry.318781198=${studentId}&entry.2129731229=Cancel`,
-    "_blank",
-  );
 
-// helper
-const csvToJson = (text) => {
+/* =====================
+   CSV → JSON
+===================== */
+
+function csvToJson(text) {
   const rows = text
     .trim()
     .split("\n")
     .map((r) => r.split(",").map((v) => v.trim()));
   const headers = rows.shift();
   return rows.map((r) => Object.fromEntries(headers.map((h, i) => [h, r[i]])));
-};
+}
+
+/* =====================
+   SEND MESSAGE
+===================== */
+
+const sendBtn = document.getElementById("sendRequestBtn");
+
+if (sendBtn) {
+  sendBtn.onclick = async () => {
+    const text = document.getElementById("requestText").value.trim();
+    const status = document.getElementById("requestStatus");
+
+    if (!text) {
+      alert("Please write a message");
+      return;
+    }
+
+    sendBtn.disabled = true;
+    sendBtn.textContent = "Sending...";
+
+    try {
+      const formData = new URLSearchParams();
+      formData.append("student_id", studentId);
+      formData.append("message", text);
+      formData.append("created_at", new Date().toISOString());
+
+const res = await fetch(REQUEST_API_URL, { method: "POST", body: formData });
+const txt = await res.text();
+console.log("API:", txt);
+
+
+      document.getElementById("requestText").value = "";
+      status.textContent = "Message sent ✅";
+      status.classList.remove("hidden");
+    } catch (err) {
+      console.error("Send error:", err);
+      alert("Failed to send message");
+    } finally {
+      sendBtn.disabled = false;
+      sendBtn.textContent = "Send message";
+    }
+  };
+}
+
+/* =====================
+   LOAD DATA
+===================== */
 
 Promise.all([
   fetch(STUDENTS_URL).then((r) => r.text()),
   fetch(LESSONS_URL).then((r) => r.text()),
-]).then(([studentsCSV, lessonsCSV]) => {
-  const students = csvToJson(studentsCSV);
-  const lessons = csvToJson(lessonsCSV);
+])
+  .then(([studentsCSV, lessonsCSV]) => {
+    const students = csvToJson(studentsCSV);
+    const lessons = csvToJson(lessonsCSV);
 
-  const student = students.find((s) => s.id === studentId);
-  const studentLessons = lessons.filter((l) => l.student_id === studentId);
+    console.log("STUDENTS:", students);
+    console.log("LESSONS:", lessons);
+    console.log("STUDENT ID:", studentId);
 
-  if (!student) {
-    document.body.innerHTML = '<p style="padding:40px">Student not found</p>';
-    return;
-  }
+    const student = students.find((s) => s.id === studentId);
 
-  render(student, studentLessons);
-});
+    const studentLessons = lessons.filter((l) => l.student_id === studentId);
+
+    if (!student) {
+      document.body.innerHTML = '<p style="padding:40px">Student not found</p>';
+      return;
+    }
+
+    render(student, studentLessons);
+  })
+  .catch((err) => {
+    console.error("LOAD ERROR:", err);
+    document.body.innerHTML = '<p style="padding:40px">Failed to load data</p>';
+  });
+
+/* =====================
+   RENDER
+===================== */
 
 function render(student, lessons) {
-  document.getElementById('greeting').textContent =
-    `Hi, ${student.name} 👋`;
+  document.getElementById("greeting").textContent = `Hey, ${student.name} ⭐`;
 
   const today = new Date().toISOString().slice(0, 10);
 
-  // сортируем по дате
   lessons.sort((a, b) => a.date.localeCompare(b.date));
 
-  // TODAY
-  const todayLesson = lessons.find(l => l.date === today);
+  // TODAY BOX
+  const todayLesson = lessons.find((l) => l.date === today);
   if (todayLesson) {
-    const box = document.getElementById('todayBox');
-    box.textContent = `You have a lesson today at ${todayLesson.time}. Don’t forget!`;
-    box.classList.remove('hidden');
+    const box = document.getElementById("todayBox");
+    box.textContent = `You have a lesson today at ${todayLesson.time}.`;
+    box.classList.remove("hidden");
   }
 
   // TABLE
-  const tbody = document.getElementById('scheduleTable');
-  tbody.innerHTML = '';
+  const tbody = document.getElementById("scheduleTable");
+  tbody.innerHTML = "";
 
-  lessons.forEach(l => {
-    const tr = document.createElement('tr');
+  lessons.forEach((l) => {
+    const tr = document.createElement("tr");
 
-    if (l.date < today) tr.classList.add('past');
-    if (l.date > today && !tbody.querySelector('.next'))
-      tr.classList.add('next');
+    if (l.date < today) tr.classList.add("past");
+    if (l.date > today && !tbody.querySelector(".next"))
+      tr.classList.add("next");
 
     tr.innerHTML = `
       <td>${l.date}</td>
@@ -98,25 +158,26 @@ function render(student, lessons) {
   });
 
   // PAYMENT
-  const price = Number(student.price);
-  document.getElementById('lessonsCount').textContent = lessons.length;
-  document.getElementById('pricePerLesson').textContent =
-    `${price} ${student.currency}`;
-  document.getElementById('totalPay').textContent =
-    `${price * lessons.length} ${student.currency}`;
-    // PAYMENT STATUS
-const paidUntil = student.paid_until;
-const statusEl = document.getElementById('paymentStatus');
+  const price = Number(student.price || 0);
 
-if (paidUntil && paidUntil < today) {
-  statusEl.textContent = 'Payment overdue';
-  statusEl.style.color = '#dc2626';
-} else if (paidUntil) {
-  statusEl.textContent = `Paid until ${paidUntil}`;
-  statusEl.style.color = '#16a34a';
-} else {
-  statusEl.textContent = 'Payment status unknown';
-  statusEl.style.color = '#64748b';
-}
+  document.getElementById("lessonsCount").textContent = lessons.length;
+  document.getElementById("pricePerLesson").textContent =
+    `${price} ${student.currency || ""}`;
+  document.getElementById("totalPay").textContent =
+    `${price * lessons.length} ${student.currency || ""}`;
 
+  // PAYMENT STATUS
+  const paidUntil = student.paid_until;
+  const statusEl = document.getElementById("paymentStatus");
+
+  if (paidUntil && paidUntil < today) {
+    statusEl.textContent = "Payment overdue";
+    statusEl.style.color = "#dc2626";
+  } else if (paidUntil) {
+    statusEl.textContent = `Paid until ${paidUntil}`;
+    statusEl.style.color = "#16a34a";
+  } else {
+    statusEl.textContent = "Payment status unknown";
+    statusEl.style.color = "#64748b";
+  }
 }

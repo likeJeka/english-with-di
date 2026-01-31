@@ -65,12 +65,23 @@
       </section>
 
       <!-- ACTIONS -->
-      <section class="actions">
-        <button id="rescheduleBtn" class="btn primary">
-          Request reschedule
-        </button>
-        <button id="cancelBtn" class="btn secondary">Cancel lesson</button>
-      </section>
+   <!-- REQUEST -->
+<section class="card">
+  <h3>Message to teacher</h3>
+
+  <textarea
+    id="requestText"
+    placeholder="Write your message here (reschedule, cancel, etc.)"
+    rows="4"
+  ></textarea>
+
+  <button id="sendRequestBtn" class="btn primary">
+    Send message
+  </button>
+
+  <p id="requestStatus" class="alert hidden"></p>
+</section>
+
     </main>
 
     <script src="student.js"></script>
