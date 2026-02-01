@@ -1,71 +1,73 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Di — Admin dashboard</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Di — Admin dashboard</title>
 
-  <link rel="stylesheet" href="admin.css" />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-    rel="stylesheet"
-  />
-</head>
+    <link rel="stylesheet" href="admin.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
 
-<body>
-  <main class="wrap">
-    <h1>Di — Admin dashboard</h1>
+  <body>
+    <main class="wrap">
+      <h1>Di — Admin dashboard</h1>
 
-    <!-- LESSONS -->
-    <section class="card">
-      <h2>Lessons schedule</h2>
+      <!-- LESSONS -->
+      <section class="card">
+        <h2>Lessons schedule</h2>
 
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Student</th>
-              <th>Date</th>
-              <th>Day</th>
-              <th>Time</th>
-            </tr>
-          </thead>
-          <tbody id="lessonsTable"></tbody>
-        </table>
-      </div>
-    </section>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Student</th>
+                <th>Message</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
 
-    <!-- REQUESTS -->
-    <section class="card">
-      <h2>Requests (manual log)</h2>
+            <tbody id="lessonsTable"></tbody>
+          </table>
+        </div>
+      </section>
 
-      <div class="form-row">
-        <input id="reqStudent" placeholder="Student name / id" />
-        <select id="reqType">
-          <option value="Reschedule">Reschedule</option>
-          <option value="Cancel">Cancel</option>
-        </select>
-        <input id="reqDate" type="date" />
-        <input id="reqComment" placeholder="Comment (optional)" />
-        <button id="addRequest">Add</button>
-      </div>
+      <!-- REQUESTS -->
+      <section class="card">
+        <h2>Requests (manual log)</h2>
 
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Student</th>
-              <th>Type</th>
-              <th>Date</th>
-              <th>Comment</th>
-            </tr>
-          </thead>
-          <tbody id="requestsTable"></tbody>
-        </table>
-      </div>
-    </section>
-  </main>
+        <div class="form-row">
+          <input id="reqStudent" placeholder="Student name / id" />
+          <select id="reqType">
+            <option value="Reschedule">Reschedule</option>
+            <option value="Cancel">Cancel</option>
+          </select>
+          <input id="reqDate" type="date" />
+          <input id="reqComment" placeholder="Comment (optional)" />
+          <button id="addRequest">Add</button>
+        </div>
 
-  <script src="admin.js"></script>
-</body>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Student</th>
+                <th>Type</th>
+                <th>Date</th>
+                <th>Comment</th>
+              </tr>
+            </thead>
+            <tbody id="requestsTable"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <script src="admin.js"></script>
+  </body>
 </html>

@@ -82,3 +82,47 @@ button {
 button:hover {
   background: #4338ca;
 }
+/* =====================
+   REQUEST STATES
+===================== */
+
+/* 🔴 новые сообщения */
+tr.new {
+  background: #fff1f2;
+}
+
+tr.new td:first-child {
+  border-left: 4px solid #dc2626;
+}
+
+/* статус */
+.status {
+  font-size: 13px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 999px;
+  display: inline-block;
+}
+
+.status-new {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.status-resolved {
+  background: #dcfce7;
+  color: #166534;
+}
+
+/* кнопка ✔ */
+.resolve-btn {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #16a34a;
+}
+
+.resolve-btn:hover {
+  transform: scale(1.15);
+}
