@@ -13,7 +13,30 @@
   </head>
 
   <body>
-    <main class="wrap">
+    <!-- LOGIN SCREEN -->
+    <main id="loginScreen" class="login-screen">
+      <div class="login-card">
+        <div class="login-icon">🔐</div>
+        <h1>Admin access</h1>
+        <p>Enter the admin key to continue.</p>
+
+        <form id="loginForm">
+          <input
+            id="adminKeyInput"
+            type="password"
+            placeholder="Admin key"
+            autocomplete="current-password"
+            required
+          />
+          <button id="loginButton" type="submit">Login</button>
+        </form>
+
+        <p id="loginError" class="login-error" role="alert"></p>
+      </div>
+    </main>
+
+    <!-- ADMIN DASHBOARD -->
+    <main class="wrap hidden" id="dashboard">
       <div class="page-heading">
         <h1>Di — Admin dashboard</h1>
         <button id="changeAdminKey" type="button" class="secondary-btn">Change key</button>
