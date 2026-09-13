@@ -1,183 +1,177 @@
-/* =====================
-   GET STUDENT ID
-===================== */
-
 const params = new URLSearchParams(window.location.search);
 const studentId = params.get("id");
+const accessToken = params.get("token");
 
-if (!studentId) {
+const API_URL =
+  "https://script.google.com/macros/s/AKfycbxuUdGX97TR3mcTENaJiIyE6oEVKHsY36u0CwGNpcmzzXWDl4UmTeph69U37eIl4tHU/exec";
+
+if (!studentId || !accessToken) {
   document.body.innerHTML =
-    '<p style="padding:40px">Your teacher will send you a personal dashboard link.</p>';
-  throw new Error("No student id");
+    '<p style="padding:40px">Use the personal link sent by your teacher.</p>';
+  throw new Error("Missing student id or access token");
 }
 
-/* =====================
-   GOOGLE SHEETS (READ)
-   ⚠️ CSV links ONLY from "Publish to web"
-===================== */
+async function apiRequest(action, data = {}, method = "GET") {
+  let response;
+  if (method === "GET") {
+    response = await fetch(`${API_URL}?${new URLSearchParams({ action, ...data })}`);
+  } else {
+    response = await fetch(API_URL, {
+      method: "POST",
+      body: new URLSearchParams({ action, ...data }),
+    });
+  }
 
-// lessons (schedule)
-const LESSONS_URL =
-  "https://docs.google.com/spreadsheets/d/e/2PACX-1vRKh8UhQOSw8u-nDvvyxZ0xpceiLisPvanrPhby6R6f_xFIazLbv4vJw-LtvVPpdknvtMDmhpdCvy8A/pub?gid=0&single=true&output=csv";
-
-// students_info
-const STUDENTS_URL =
-  "https://docs.google.com/spreadsheets/d/e/2PACX-1vRKh8UhQOSw8u-nDvvyxZ0xpceiLisPvanrPhby6R6f_xFIazLbv4vJw-LtvVPpdknvtMDmhpdCvy8A/pub?gid=1020253581&single=true&output=csv";
-
-/* =====================
-   REQUEST API (WRITE)
-===================== */
-
-const REQUEST_API_URL = "https://script.google.com/macros/s/AKfycbxB9_ncsflK8Ni0Py-PYPHz1J3rEPhCUmBFWeCltGea7pkbsX1T6bqeiuWLSShTIm5t/exec";
-
-
-/* =====================
-   CSV → JSON
-===================== */
-
-function csvToJson(text) {
-  const rows = text
-    .trim()
-    .split("\n")
-    .map((r) => r.split(",").map((v) => v.trim()));
-  const headers = rows.shift();
-  return rows.map((r) => Object.fromEntries(headers.map((h, i) => [h, r[i]])));
+  let result;
+  try {
+    result = await response.json();
+  } catch {
+    throw new Error("The server returned an invalid response");
+  }
+  if (!response.ok || !result.ok) {
+    throw new Error(result.error || `Server error: ${response.status}`);
+  }
+  return result;
 }
 
-/* =====================
-   SEND MESSAGE
-===================== */
-
-const sendBtn = document.getElementById("sendRequestBtn");
-
-if (sendBtn) {
-  sendBtn.onclick = async () => {
-    const text = document.getElementById("requestText").value.trim();
-    const status = document.getElementById("requestStatus");
-
-    if (!text) {
-      alert("Please write a message");
-      return;
-    }
-
-    sendBtn.disabled = true;
-    sendBtn.textContent = "Sending...";
-
-    try {
-      const formData = new URLSearchParams();
-      formData.append("student_id", studentId);
-      formData.append("message", text);
-      formData.append("created_at", new Date().toISOString());
-
-const res = await fetch(REQUEST_API_URL, { method: "POST", body: formData });
-const txt = await res.text();
-console.log("API:", txt);
-
-
-      document.getElementById("requestText").value = "";
-      status.textContent = "Message sent ✅";
-      status.classList.remove("hidden");
-    } catch (err) {
-      console.error("Send error:", err);
-      alert("Failed to send message");
-    } finally {
-      sendBtn.disabled = false;
-      sendBtn.textContent = "Send message";
-    }
-  };
+function localDate() {
+  const now = new Date();
+  return new Date(now.getTime() - now.getTimezoneOffset() * 60_000)
+    .toISOString()
+    .slice(0, 10);
 }
 
-/* =====================
-   LOAD DATA
-===================== */
+function formatDateTime(value) {
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? value : date.toLocaleString("en-GB");
+}
 
-Promise.all([
-  fetch(STUDENTS_URL).then((r) => r.text()),
-  fetch(LESSONS_URL).then((r) => r.text()),
-])
-  .then(([studentsCSV, lessonsCSV]) => {
-    const students = csvToJson(studentsCSV);
-    const lessons = csvToJson(lessonsCSV);
+function renderReplies(replies) {
+  const list = document.getElementById("repliesList");
+  const empty = document.getElementById("repliesEmpty");
+  list.innerHTML = "";
+  empty.classList.toggle("hidden", replies.length > 0);
 
-    console.log("STUDENTS:", students);
-    console.log("LESSONS:", lessons);
-    console.log("STUDENT ID:", studentId);
-
-    const student = students.find((s) => s.id === studentId);
-
-    const studentLessons = lessons.filter((l) => l.student_id === studentId);
-
-    if (!student) {
-      document.body.innerHTML = '<p style="padding:40px">Student not found</p>';
-      return;
-    }
-
-    render(student, studentLessons);
-  })
-  .catch((err) => {
-    console.error("LOAD ERROR:", err);
-    document.body.innerHTML = '<p style="padding:40px">Failed to load data</p>';
+  replies.forEach((reply) => {
+    const item = document.createElement("article");
+    item.className = "reply";
+    const message = document.createElement("p");
+    message.textContent = reply.message || "";
+    const timestamp = document.createElement("time");
+    timestamp.textContent = formatDateTime(reply.created_at || "");
+    item.append(message, timestamp);
+    list.appendChild(item);
   });
+}
 
-/* =====================
-   RENDER
-===================== */
+async function loadReplies() {
+  try {
+    const result = await apiRequest("student_replies", {
+      student_id: studentId,
+      token: accessToken,
+    });
+    renderReplies(result.replies || []);
+  } catch (error) {
+    console.error("Replies loading error:", error);
+  }
+}
 
 function render(student, lessons) {
   document.getElementById("greeting").textContent = `Hey, ${student.name} ⭐`;
+  const today = localDate();
+  const sortedLessons = [...lessons].sort((a, b) =>
+    String(a.date).localeCompare(String(b.date)),
+  );
 
-  const today = new Date().toISOString().slice(0, 10);
-
-  lessons.sort((a, b) => a.date.localeCompare(b.date));
-
-  // TODAY BOX
-  const todayLesson = lessons.find((l) => l.date === today);
+  const todayLesson = sortedLessons.find((lesson) => lesson.date === today);
   if (todayLesson) {
     const box = document.getElementById("todayBox");
     box.textContent = `You have a lesson today at ${todayLesson.time}.`;
     box.classList.remove("hidden");
   }
 
-  // TABLE
   const tbody = document.getElementById("scheduleTable");
   tbody.innerHTML = "";
+  sortedLessons.forEach((lesson) => {
+    const row = document.createElement("tr");
+    if (lesson.date < today) row.classList.add("past");
+    if (lesson.date > today && !tbody.querySelector(".next")) row.classList.add("next");
 
-  lessons.forEach((l) => {
-    const tr = document.createElement("tr");
-
-    if (l.date < today) tr.classList.add("past");
-    if (l.date > today && !tbody.querySelector(".next"))
-      tr.classList.add("next");
-
-    tr.innerHTML = `
-      <td>${l.date}</td>
-      <td>${l.day}</td>
-      <td>${l.time}</td>
-    `;
-    tbody.appendChild(tr);
+    [lesson.date, lesson.day, lesson.time].forEach((value) => {
+      const cell = document.createElement("td");
+      cell.textContent = value || "";
+      row.appendChild(cell);
+    });
+    tbody.appendChild(row);
   });
 
-  // PAYMENT
   const price = Number(student.price || 0);
-
-  document.getElementById("lessonsCount").textContent = lessons.length;
-  document.getElementById("pricePerLesson").textContent =
-    `${price} ${student.currency || ""}`;
+  const monthlyLessons = sortedLessons.filter((lesson) =>
+    String(lesson.date || "").startsWith(today.slice(0, 7)),
+  );
+  document.getElementById("lessonsCount").textContent = monthlyLessons.length;
+  document.getElementById("pricePerLesson").textContent = `${price} ${student.currency || ""}`;
   document.getElementById("totalPay").textContent =
-    `${price * lessons.length} ${student.currency || ""}`;
+    `${price * monthlyLessons.length} ${student.currency || ""}`;
 
-  // PAYMENT STATUS
-  const paidUntil = student.paid_until;
-  const statusEl = document.getElementById("paymentStatus");
-
-  if (paidUntil && paidUntil < today) {
-    statusEl.textContent = "Payment overdue";
-    statusEl.style.color = "#dc2626";
-  } else if (paidUntil) {
-    statusEl.textContent = `Paid until ${paidUntil}`;
-    statusEl.style.color = "#16a34a";
+  const status = document.getElementById("paymentStatus");
+  if (student.paid_until && student.paid_until < today) {
+    status.textContent = "Payment overdue";
+    status.style.color = "#dc2626";
+  } else if (student.paid_until) {
+    status.textContent = `Paid until ${student.paid_until}`;
+    status.style.color = "#16a34a";
   } else {
-    statusEl.textContent = "Payment status unknown";
-    statusEl.style.color = "#64748b";
+    status.textContent = "Payment status unknown";
+    status.style.color = "#64748b";
   }
 }
+
+async function loadDashboard() {
+  try {
+    const result = await apiRequest("student_dashboard", {
+      student_id: studentId,
+      token: accessToken,
+    });
+    render(result.student, result.lessons || []);
+    await loadReplies();
+  } catch (error) {
+    console.error("Dashboard loading error:", error);
+    document.body.innerHTML =
+      '<p style="padding:40px">This personal link is invalid or has expired.</p>';
+  }
+}
+
+const sendButton = document.getElementById("sendRequestBtn");
+sendButton.addEventListener("click", async () => {
+  const input = document.getElementById("requestText");
+  const status = document.getElementById("requestStatus");
+  const message = input.value.trim();
+  if (!message) {
+    status.textContent = "Please write a message.";
+    status.classList.remove("hidden");
+    return;
+  }
+
+  sendButton.disabled = true;
+  sendButton.textContent = "Sending...";
+  try {
+    await apiRequest(
+      "student_message",
+      { student_id: studentId, token: accessToken, message },
+      "POST",
+    );
+    input.value = "";
+    status.textContent = "Message sent ✅";
+  } catch (error) {
+    console.error("Message sending error:", error);
+    status.textContent = "The message was not sent. Please try again.";
+  } finally {
+    status.classList.remove("hidden");
+    sendButton.disabled = false;
+    sendButton.textContent = "Send message";
+  }
+});
+
+loadDashboard();
+window.setInterval(loadReplies, 30_000);

@@ -14,11 +14,26 @@
 
   <body>
     <main class="wrap">
-      <h1>Di — Admin dashboard</h1>
+      <div class="page-heading">
+        <h1>Di — Admin dashboard</h1>
+        <button id="changeAdminKey" type="button" class="secondary-btn">Change key</button>
+      </div>
+      <p id="adminStatus" class="admin-status" role="status"></p>
 
-      <!-- LESSONS -->
+      <!-- REQUESTS -->
       <section class="card">
-        <h2>Lessons schedule</h2>
+        <h2>Student requests</h2>
+
+        <div class="form-row">
+          <input id="reqStudent" placeholder="Student name / id" />
+          <select id="reqType">
+            <option value="Reschedule">Reschedule</option>
+            <option value="Cancel">Cancel</option>
+          </select>
+          <input id="reqDate" type="date" />
+          <input id="reqComment" placeholder="Comment (optional)" />
+          <button id="addRequest" type="button">Add</button>
+        </div>
 
         <div class="table-wrap">
           <table>
@@ -32,38 +47,17 @@
               </tr>
             </thead>
 
-            <tbody id="lessonsTable"></tbody>
+            <tbody id="requestsTable"></tbody>
           </table>
         </div>
       </section>
 
-      <!-- REQUESTS -->
       <section class="card">
-        <h2>Requests (manual log)</h2>
-
+        <h2>Reply to a student</h2>
         <div class="form-row">
-          <input id="reqStudent" placeholder="Student name / id" />
-          <select id="reqType">
-            <option value="Reschedule">Reschedule</option>
-            <option value="Cancel">Cancel</option>
-          </select>
-          <input id="reqDate" type="date" />
-          <input id="reqComment" placeholder="Comment (optional)" />
-          <button id="addRequest">Add</button>
-        </div>
-
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Student</th>
-                <th>Type</th>
-                <th>Date</th>
-                <th>Comment</th>
-              </tr>
-            </thead>
-            <tbody id="requestsTable"></tbody>
-          </table>
+          <input id="replyStudent" placeholder="Student id" />
+          <textarea id="replyMessage" placeholder="Your message to the student" rows="3"></textarea>
+          <button id="sendReply" type="button">Send reply</button>
         </div>
       </section>
     </main>

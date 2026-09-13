@@ -275,6 +275,28 @@ body {
   color: var(--text-muted);
 }
 
+.replies {
+  display: grid;
+  gap: 12px;
+}
+
+.reply {
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: #f8fafc;
+}
+
+.reply p {
+  margin: 0 0 8px;
+  white-space: pre-wrap;
+}
+
+.reply time {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
 /* Mobile */
 @media (max-width: 600px) {
   .message-actions {

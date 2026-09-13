@@ -1,105 +1,153 @@
-/* =====================
-   REQUESTS CSV
-===================== */
+const API_URL =
+  "https://script.google.com/macros/s/AKfycbxuUdGX97TR3mcTENaJiIyE6oEVKHsY36u0CwGNpcmzzXWDl4UmTeph69U37eIl4tHU/exec";
 
-// ⚠️ CSV ТОЙ ЖЕ ТАБЛИЦЫ, КУДА ПИШЕТ Apps Script
-const REQUESTS_URL =
-  "https://docs.google.com/spreadsheets/d/e/2PACX-1vRKh8UhQOSw8u-nDvvyxZ0xpceiLisPvanrPhby6R6f_xFIazLbv4vJw-LtvVPpdknvtMDmhpdCvy8A/pub?output=csv&gid=928782791";
+function getAdminKey() {
+  let key = sessionStorage.getItem("diAdminKey");
+  if (!key) {
+    key = window.prompt("Enter the admin key:")?.trim();
+    if (key) sessionStorage.setItem("diAdminKey", key);
+  }
+  if (!key) throw new Error("Admin key is required");
+  return key;
+}
 
-const RESOLVE_API_URL =
-  "https://script.google.com/macros/s/AKfycbxB9_ncsflK8Ni0Py-PYPHz1J3rEPhCUmBFWeCltGea7pkbsX1T6bqeiuWLSShTIm5t/exec";
-
-/* =====================
-   CSV → JSON
-===================== */
-
-const csvToJson = (text) => {
-  const rows = text
-    .trim()
-    .split("\n")
-    .map((r) => r.split(",").map((v) => v.trim()));
-
-  const headers = rows.shift();
-
-  return rows.map((r) => Object.fromEntries(headers.map((h, i) => [h, r[i]])));
-};
-
-/* =====================
-   LOAD REQUESTS
-===================== */
-
-fetch(REQUESTS_URL + "&nocache=" + Date.now())
-  .then((r) => r.text())
-  .then((csv) => {
-    const requests = csvToJson(csv);
-    renderRequests(requests);
-  })
-  .catch((err) => console.error("REQUESTS ERROR:", err));
-
-/* =====================
-   RENDER REQUESTS
-===================== */
-function formatDate(iso) {
-  if (!iso) return "";
-  const d = new Date(iso);
-  return d.toLocaleString("en-GB", {
-    day: "2-digit",
-    month: "short",
-    hour: "2-digit",
-    minute: "2-digit",
+async function adminRequest(action, data = {}) {
+  const response = await fetch(API_URL, {
+    method: "POST",
+    body: new URLSearchParams({ action, admin_key: getAdminKey(), ...data }),
   });
+  let result;
+  try {
+    result = await response.json();
+  } catch {
+    throw new Error("The server returned an invalid response");
+  }
+  if (!response.ok || !result.ok) {
+    throw new Error(result.error || `Server error: ${response.status}`);
+  }
+  return result;
+}
+
+function formatDate(value) {
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? value || "" : date.toLocaleString("en-GB");
+}
+
+function addCell(row, value) {
+  const cell = document.createElement("td");
+  cell.textContent = value || "";
+  row.appendChild(cell);
 }
 
 function renderRequests(requests) {
   const tbody = document.getElementById("requestsTable");
   tbody.innerHTML = "";
+  requests.forEach((request) => {
+    const row = document.createElement("tr");
+    const isNew = request.status === "new";
+    if (isNew) row.classList.add("new");
+    addCell(row, request.student_id);
+    addCell(row, request.message);
+    addCell(row, formatDate(request.created_at));
 
-  requests
-    .filter((r) => r.status !== "resolved")
-    .forEach((r) => {
-      const tr = document.createElement("tr");
+    const statusCell = document.createElement("td");
+    const status = document.createElement("span");
+    status.className = `status ${isNew ? "status-new" : "status-resolved"}`;
+    status.textContent = request.status || "";
+    statusCell.appendChild(status);
+    row.appendChild(statusCell);
 
-      const isNew = r.status === "new";
-      if (isNew) tr.classList.add("new");
-
-      tr.innerHTML = `
-        <td>${r.student_id || ""}</td>
-        <td>${r.message || ""}</td>
-        <td>${formatDate(r.created_at)}</td>
-        <td>
-          <span class="status ${isNew ? "status-new" : "status-resolved"}">
-            ${r.status || ""}
-          </span>
-        </td>
-        <td>
-          ${
-            isNew
-              ? `<button class="resolve-btn" title="Resolved">✔</button>`
-              : ""
-          }
-        </td>
-      `;
-
-      if (isNew) {
-        tr.querySelector(".resolve-btn").addEventListener("click", async () => {
-          try {
-            const formData = new URLSearchParams();
-            formData.append("action", "resolve");
-            formData.append("created_at", r.created_at);
-
-            await fetch(RESOLVE_API_URL, {
-              method: "POST",
-              body: formData,
-            });
-
-            tr.remove();
-          } catch (err) {
-            console.error("Resolve error:", err);
-            alert("Failed to resolve request");
-          }
-        });
-      }
-
-      tbody.appendChild(tr);
-    });
+    const actionCell = document.createElement("td");
+    if (isNew) {
+      const button = document.createElement("button");
+      button.className = "resolve-btn";
+      button.type = "button";
+      button.title = "Mark as resolved";
+      button.textContent = "✔";
+      button.addEventListener("click", async () => {
+        button.disabled = true;
+        try {
+          await adminRequest("admin_resolve", { request_id: request.request_id });
+          await loadRequests();
+        } catch (error) {
+          console.error("Resolve error:", error);
+          alert("The request could not be resolved.");
+          button.disabled = false;
+        }
+      });
+      actionCell.appendChild(button);
+    }
+    row.appendChild(actionCell);
+    tbody.appendChild(row);
+  });
 }
+
+async function loadRequests() {
+  try {
+    const result = await adminRequest("admin_requests");
+    document.getElementById("adminStatus").textContent = "";
+    renderRequests(result.requests || []);
+  } catch (error) {
+    console.error("Requests loading error:", error);
+    document.getElementById("adminStatus").textContent =
+      "Requests could not be loaded. Check the admin key and Apps Script deployment.";
+  }
+}
+
+document.getElementById("changeAdminKey").addEventListener("click", () => {
+  sessionStorage.removeItem("diAdminKey");
+  loadRequests();
+});
+
+document.getElementById("sendReply").addEventListener("click", async () => {
+  const studentInput = document.getElementById("replyStudent");
+  const messageInput = document.getElementById("replyMessage");
+  const student = studentInput.value.trim();
+  const message = messageInput.value.trim();
+  if (!student || !message) return alert("Enter a student id and a message.");
+
+  const button = document.getElementById("sendReply");
+  button.disabled = true;
+  button.textContent = "Sending...";
+  try {
+    await adminRequest("admin_send_reply", { student_id: student, message });
+    studentInput.value = "";
+    messageInput.value = "";
+    alert("Reply sent.");
+  } catch (error) {
+    console.error("Reply error:", error);
+    alert("The reply could not be sent.");
+  } finally {
+    button.disabled = false;
+    button.textContent = "Send reply";
+  }
+});
+
+document.getElementById("addRequest").addEventListener("click", async () => {
+  const student = document.getElementById("reqStudent").value.trim();
+  const type = document.getElementById("reqType").value;
+  const comment = document.getElementById("reqComment").value.trim();
+  if (!student) return alert("Enter the student name or id.");
+
+  const button = document.getElementById("addRequest");
+  button.disabled = true;
+  button.textContent = "Adding...";
+  try {
+    await adminRequest("admin_create_request", {
+      student_id: student,
+      message: `${type}${comment ? `: ${comment}` : ""}`,
+    });
+    document.getElementById("reqStudent").value = "";
+    document.getElementById("reqComment").value = "";
+    await loadRequests();
+  } catch (error) {
+    console.error("Add request error:", error);
+    alert("The request could not be added.");
+  } finally {
+    button.disabled = false;
+    button.textContent = "Add";
+  }
+});
+
+loadRequests();
+window.setInterval(loadRequests, 30_000);

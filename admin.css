@@ -21,6 +21,22 @@ h1 {
   margin-bottom: 32px;
 }
 
+.page-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.page-heading h1 {
+  margin-bottom: 32px;
+}
+
+.admin-status {
+  color: #b91c1c;
+  margin: -16px 0 20px;
+}
+
 h2 {
   margin-bottom: 20px;
 }
@@ -62,11 +78,17 @@ th {
   margin-bottom: 20px;
 }
 
-input, select {
+input, select, textarea {
   padding: 10px 12px;
   border-radius: 8px;
   border: 1px solid #e2e8f0;
   font-size: 14px;
+}
+
+textarea {
+  min-width: 260px;
+  font-family: inherit;
+  resize: vertical;
 }
 
 button {
@@ -81,6 +103,15 @@ button {
 
 button:hover {
   background: #4338ca;
+}
+
+.secondary-btn {
+  background: #e2e8f0;
+  color: #1e293b;
+}
+
+.secondary-btn:hover {
+  background: #cbd5e1;
 }
 /* =====================
    REQUEST STATES

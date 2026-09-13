@@ -1,11 +1,13 @@
 const modal = document.querySelector('.modal');
 const openButtons = document.querySelectorAll(
-  '#openModal, .mobile-btn, .primary-btn'
+  '#openModal, .mobile-btn, .hero .primary-btn'
 );
 const closeElements = document.querySelectorAll('[data-close]');
+const modalMobileMenu = document.querySelector('.mobile-menu');
 
 openButtons.forEach(btn => {
   btn.addEventListener('click', () => {
+    modalMobileMenu?.classList.remove('open');
     modal.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
   });

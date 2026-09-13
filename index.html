@@ -182,12 +182,12 @@
     <form class="contact-form" novalidate>
       <label>
         Name
-        <input type="text" required />
+        <input type="text" name="name" required />
       </label>
 
       <label>
         Level
-        <select required>
+        <select name="level" required>
           <option value="">Choose level</option>
           <option>A1</option>
           <option>A2</option>
@@ -199,7 +199,7 @@
 
       <label>
         Contact (Telegram / Email)
-        <input type="text" required />
+        <input type="text" name="contact" required />
       </label>
 
       <button class="btn primary-btn" type="submit">Send request</button>
@@ -211,6 +211,5 @@
     <script src="modal.js" defer></script>
     <script src="form.js" defer></script>
     <script src="menu.js" defer></script>
-    <script src="/modal.js" defer></script>
   </body>
 </html>

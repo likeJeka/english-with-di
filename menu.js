@@ -11,3 +11,10 @@ closeBtn.addEventListener("click", () => {
   mobileMenu.classList.remove("open");
   document.body.style.overflow = "";
 });
+
+mobileMenu.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', () => {
+    mobileMenu.classList.remove('open');
+    document.body.style.overflow = '';
+  });
+});
