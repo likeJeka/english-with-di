@@ -4,6 +4,7 @@ const STUDENT_INFO_SHEET = "students_info";
 const REQUESTS_SHEET = "requests";
 const REPLIES_SHEET = "teacher_messages";
 const APP_TIME_ZONE = "Europe/Kyiv";
+const BOOKING_SHEET = "booking_forms";
 
 function doGet(e) {
   return handleRequest_(e && e.parameter ? e.parameter : {});
@@ -162,27 +163,104 @@ function createStudentMessage_(data) {
   return appendRequest_(student.id, data.message, "Student message", "");
 }
 
-function createBooking_(data) {
-  const name = String(data.name || "").trim();
-  const level = String(data.level || "").trim();
-  const contact = String(data.contact || "").trim();
-  const requestType = String(data.request_type || "Not specified").trim() || "Not specified";
+function getBookingSheet_() {
+  const spreadsheet = getSpreadsheet_();
+  let sheet = spreadsheet.getSheetByName(BOOKING_SHEET);
 
-  if (name.length < 2 || !level || contact.length < 3) {
-    throw new Error("Fill in all booking fields");
+  const headers = [
+    "created_at",
+    "name",
+    "age",
+    "contact",
+    "level",
+    "goal",
+    "format",
+    "request_type",
+    "teacher",
+    "lessons_per_week",
+    "preferred_time",
+    "experience",
+    "skills",
+    "wishes",
+    "source",
+  ];
+
+  if (!sheet) {
+    sheet = spreadsheet.insertSheet(BOOKING_SHEET);
+    sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+    return sheet;
   }
 
-  const allowedTypes = ["Individual lesson", "Group lesson", "Not specified"];
-  if (!allowedTypes.includes(requestType)) {
+  const existing = sheet.getRange(1, 1, 1, Math.max(sheet.getLastColumn(), 1)).getDisplayValues()[0];
+  headers.forEach((header) => {
+    if (!existing.includes(header)) {
+      sheet.getRange(1, sheet.getLastColumn() + 1).setValue(header);
+      existing.push(header);
+    }
+  });
+
+  return sheet;
+}
+
+function createBooking_(data) {
+  const clean = {
+    name: String(data.name || "").trim(),
+    age: String(data.age || "").trim(),
+    contact: String(data.contact || "").trim(),
+    level: String(data.level || "").trim(),
+    goal: String(data.goal || "").trim(),
+    format: String(data.format || "").trim(),
+    request_type: String(data.request_type || "Not specified").trim() || "Not specified",
+    teacher: String(data.teacher || "").trim(),
+    lessons_per_week: String(data.lessons_per_week || "").trim(),
+    preferred_time: String(data.preferred_time || "").trim(),
+    experience: String(data.experience || "").trim(),
+    skills: String(data.skills || "").trim(),
+    wishes: String(data.wishes || "").trim(),
+    source: String(data.source || "").trim(),
+  };
+
+  if (clean.name.length < 2 || !clean.contact || !clean.level) {
+    throw new Error("Fill in your name, level and contact details");
+  }
+
+  const allowedTypes = [
+    "Individual lesson",
+    "Group lesson",
+    "Pair lesson",
+    "Not specified",
+  ];
+  if (!allowedTypes.includes(clean.request_type)) {
     throw new Error("Invalid lesson format");
   }
 
-  return appendRequest_(
-    `Booking: ${name}`,
-    `Level: ${level}; Contact: ${contact}; Format: ${requestType}`,
-    requestType,
-    ""
-  );
+  if (clean.age && (!/^\d+$/.test(clean.age) || Number(clean.age) < 10 || Number(clean.age) > 100)) {
+    throw new Error("Please enter a valid age");
+  }
+
+  const sheet = getBookingSheet_();
+  const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getDisplayValues()[0];
+
+  const values = {
+    created_at: Utilities.formatDate(new Date(), APP_TIME_ZONE, "yyyy-MM-dd HH:mm:ss"),
+    ...clean,
+  };
+
+  const row = headers.map((header) => values[header] !== undefined ? values[header] : "");
+  sheet.appendRow(row);
+
+  // Keep a compact notification in the existing requests sheet for the current admin panel.
+  const summary = [
+    `Level: ${clean.level}`,
+    `Contact: ${clean.contact}`,
+    `Format: ${clean.format || clean.request_type || "Not specified"}`,
+    `Teacher: ${clean.teacher || "Not specified"}`,
+    `Lessons/week: ${clean.lessons_per_week || "Not specified"}`,
+    `Time: ${clean.preferred_time || "Not specified"}`,
+  ].join("; ");
+
+  appendRequest_(`Booking: ${clean.name}`, summary, clean.request_type, "");
+  return {};
 }
 
 function ensureRequestColumns_(sheet) {

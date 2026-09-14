@@ -1,10 +1,9 @@
 const modal = document.querySelector('.modal');
-const openButtons = document.querySelectorAll(
-  '#openModal, .open-booking'
-);
+const openButtons = document.querySelectorAll('#openModal, .open-booking');
 const closeElements = document.querySelectorAll('[data-close]');
 const modalMobileMenu = document.querySelector('.mobile-menu');
 const selectedFormat = document.querySelector('#selected-format');
+const modalForm = document.querySelector('.modal-form');
 
 function openBooking(type = 'Not specified') {
   modalMobileMenu?.classList.remove('open');
@@ -13,17 +12,46 @@ function openBooking(type = 'Not specified') {
   modal?.classList.remove('hidden');
   document.body.style.overflow = 'hidden';
 
-  document.querySelectorAll('.modal .contact-form').forEach((form) => {
-    if (form.elements.request_type) {
-      form.elements.request_type.value = normalizedType;
-    }
-  });
+  if (modalForm) {
+    const requestType = modalForm.elements.request_type;
+    const format = modalForm.elements.format;
 
-  if (selectedFormat) {
-    selectedFormat.innerHTML = `Lesson format: <strong>${normalizedType}</strong>`;
-    selectedFormat.classList.toggle('is-selected', normalizedType !== 'Not specified');
+    if (requestType) {
+      requestType.value = normalizedType;
+    }
+
+    // Pre-select a sensible format when the user came from a lesson-format card.
+    if (format && normalizedType !== 'Not specified') {
+      if (normalizedType === 'Individual lesson') {
+        format.value = 'Індивідуальне заняття — 55 хв';
+      } else if (normalizedType === 'Group lesson') {
+        format.value = 'Групове заняття — 75 хв';
+      }
+    }
+  }
+
+  updateSelectedFormat();
+}
+
+function updateSelectedFormat() {
+  if (!selectedFormat || !modalForm) return;
+
+  const format = modalForm.elements.format?.value || '';
+  const requestType = modalForm.elements.request_type?.value || 'Not specified';
+  const label = format || requestType;
+
+  selectedFormat.innerHTML = `Формат заняття: <strong>${label}</strong>`;
+  selectedFormat.classList.toggle('is-selected', Boolean(format || requestType !== 'Not specified'));
+
+  if (format && modalForm.elements.request_type) {
+    modalForm.elements.request_type.value =
+      format.startsWith('Групове') ? 'Group lesson' :
+      format.startsWith('Індивідуальне') ? 'Individual lesson' :
+      format.startsWith('Заняття в парі') ? 'Pair lesson' : format;
   }
 }
+
+modalForm?.elements.format?.addEventListener('change', updateSelectedFormat);
 
 openButtons.forEach((btn) => {
   btn.addEventListener('click', () => {
