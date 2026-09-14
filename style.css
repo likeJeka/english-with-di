@@ -1009,8 +1009,16 @@ select {
   .benefits-grid {
     grid-template-columns: 1fr;
   }
+  .format-grid {
+    grid-template-columns: 1fr;
+  }
+
   .format-copy {
-    max-width: 68%;
+    max-width: 100%;
+  }
+
+  .format-art {
+    display: none;
   }
   .reviews-layout {
     grid-template-columns: 1fr;
@@ -1129,6 +1137,12 @@ select {
   .format-card {
     min-height: 330px;
   }
+  .format-copy {
+    max-width: 100%;
+  }
+  .format-art {
+    display: none;
+  }
   .goals-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -1230,13 +1244,6 @@ select {
   .format-card {
     padding: 20px;
     min-height: 350px;
-  }
-  .format-copy {
-    max-width: 72%;
-  }
-  .format-art {
-    width: 46%;
-    opacity: 0.8;
   }
   .goals-grid {
     grid-template-columns: 1fr 1fr;
@@ -1400,7 +1407,6 @@ select {
   }
 }
 
-
 /* =========================================================
    BOOKING FORM — extra room + long questionnaire modal
    ========================================================= */
@@ -1427,12 +1433,14 @@ select {
   color: #1c2741;
   font-size: 12px;
   outline: none;
-  transition: border-color .2s, box-shadow .2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
 }
 
 .contact-form textarea:focus {
   border-color: #d89a00;
-  box-shadow: 0 0 0 3px rgba(217, 168, 0, .12);
+  box-shadow: 0 0 0 3px rgba(217, 168, 0, 0.12);
 }
 
 .modal-content {
@@ -1516,36 +1524,3 @@ select {
     grid-column: 1;
   }
 }
-
-
-/* Warm gold theme — no purple/pink accents */
-:root {
-  --accent: #d58a00;
-  --accent-dark: #a96500;
-  --accent-light: #fff0c7;
-  --accent-pale: #fff8e8;
-  --orange: #e59a19;
-}
-.trust-icon.pink, .goal-icon.pink, .benefit-icon.red, .goal-icon.red {
-  background: #fff0c7 !important;
-  color: #c87500 !important;
-}
-.scribble-note, .sparkle, .section-heading p, .reviews-intro a, .scribble-success, .scribble-contact {
-  color: #c47700 !important;
-}
-.primary-btn {
-  background: linear-gradient(135deg, #e3a11a 0%, #f0b83d 52%, #c87500 100%) !important;
-  box-shadow: 0 12px 28px rgba(211, 133, 0, .24) !important;
-}
-.primary-btn:hover { box-shadow: 0 16px 32px rgba(211, 133, 0, .30) !important; }
-.hero {
-  background:
-    radial-gradient(circle at 78% 20%, rgba(255, 216, 135, .55), transparent 30%),
-    radial-gradient(circle at 100% 80%, rgba(245, 178, 55, .18), transparent 28%),
-    linear-gradient(135deg, #fffaf0 0%, #fffdf8 48%, #fff4d6 100%) !important;
-}
-.format-card.individual { background: linear-gradient(125deg, #fff1c7, #fff8e9) !important; }
-.format-card.group { background: linear-gradient(125deg, #fff2dd, #fff8ee) !important; }
-.selected-format.is-selected { background: linear-gradient(135deg, #fff0c7, #fffaf0) !important; color: #9b6100 !important; }
-.success-content { background: linear-gradient(145deg, #fff, #fff8e8) !important; }
-.success-check { background: linear-gradient(135deg, #e3a11a, #c87500) !important; box-shadow: 0 14px 30px rgba(211, 133, 0, .25) !important; }
