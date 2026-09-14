@@ -1,215 +1,307 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="description"
-      content="Online English lessons for students aged 16–35. Levels A1–C1. Individual and group classes."
-    />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Online English Tutor</title>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content="Online English lessons with Di. Practical English for real life, work, travel and confident communication. Levels A1–C1." />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f7f5ff" />
+  <title>English with Di — English lessons for real life</title>
 
-    <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Pacifico&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-  </head>
+<body>
+  <header class="site-header">
+    <div class="wrapper header-inner">
+      <a class="brand" href="#top" aria-label="English with Di home">
+        <span class="brand-mark">✦</span>
+        <span>English with Di</span>
+      </a>
 
-  <body>
-    <!-- HEADER -->
-    <header class="site-header">
-      <div class="wrapper">
-        <h1 class="logo-text">
-          <a href="/">English with Di</a>
-        </h1>
+      <nav class="header-nav" aria-label="Primary navigation">
+        <ul class="navigation">
+          <li><a href="#about">About</a></li>
+          <li><a href="#formats">Lessons</a></li>
+          <li><a href="#reviews">Reviews</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+        <button class="btn header-cta open-booking" type="button">Book a lesson <span>→</span></button>
+      </nav>
 
-        <nav class="header-nav" aria-label="Primary">
-          <ul class="navigation">
-            <li><a href="#about">About</a></li>
-            <li><a href="#formats">Lessons</a></li>
-            <li><a href="#reviews">Reviews</a></li>
-            <li><a href="#contact">Contact</a></li>
-          </ul>
+      <button class="burger" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
+    </div>
+  </header>
 
-          <button
-            class="btn header-btn header-cta"
-            type="button"
-            aria-haspopup="dialog"
-            id="openModal"
-          >
-            Book a lesson
-          </button>
-        </nav>
+  <nav class="mobile-menu" aria-label="Mobile navigation">
+    <button class="close-menu" type="button" aria-label="Close menu">✕</button>
+    <a href="#about">About</a>
+    <a href="#formats">Lessons</a>
+    <a href="#reviews">Reviews</a>
+    <a href="#contact">Contact</a>
+    <button class="btn primary-btn mobile-btn open-booking" type="button">Book a lesson <span>→</span></button>
+  </nav>
 
-        <button class="burger" aria-label="Open menu">☰</button>
-      </div>
-    </header>
+  <main id="top">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-glow hero-glow-one"></div>
+      <div class="hero-glow hero-glow-two"></div>
+      <div class="wrapper hero-grid">
+        <div class="hero-copy reveal">
+          <span class="eyebrow"><i></i> ONLINE ENGLISH TUTOR</span>
+          <h1>English lessons<br /><span>for real life.</span></h1>
+          <p class="hero-lead">Speak confidently. Gain real skills. Achieve your goals.</p>
+          <p class="hero-description">Online English for students aged 16–35. Levels A1–C1.<br class="desktop-only" /> Individual and group lessons.</p>
 
-    <!-- MOBILE MENU -->
-    <nav class="mobile-menu" aria-label="Mobile navigation">
-      <button class="close-menu">✕</button>
-      <a href="#about">About</a>
-      <a href="#formats">Lessons</a>
-      <a href="#reviews">Reviews</a>
-      <a href="#contact">Contact</a>
-      <button class="btn mobile-btn" type="button">Book a lesson</button>
-    </nav>
+          <div class="hero-actions">
+            <button class="btn primary-btn open-booking" type="button">Start learning <span>→</span></button>
+            <a class="btn ghost-btn" href="#about">Learn more <span>↓</span></a>
+          </div>
 
-    <!-- HERO (FULL WIDTH) -->
-    <section class="hero" aria-labelledby="hero-title">
-      <div class="hero-inner">
-        <h2 id="hero-title">English lessons for real life</h2>
-        <p>
-          Online English for students aged 16–35. Levels A1–C1. Individual and
-          group lessons.
-        </p>
-        <button class="btn primary-btn" type="button">Start learning</button>
+          <div class="trust-row" aria-label="Lesson highlights">
+            <div class="trust-item">
+              <span class="trust-icon purple">♧</span>
+              <div><strong>A1 – C1</strong><small>All levels welcome</small></div>
+            </div>
+            <div class="trust-item">
+              <span class="trust-icon blue">▣</span>
+              <div><strong>Online</strong><small>Learn from anywhere</small></div>
+            </div>
+            <div class="trust-item">
+              <span class="trust-icon pink">♡</span>
+              <div><strong>1:1 & Groups</strong><small>Choose your format</small></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-visual reveal delay-1">
+          <div class="scribble-note note-left">Better English<br />A brighter you<br /><b>♡</b></div>
+          <div class="photo-frame">
+            <img src="teacher-placeholder.jpg" alt="Di, English tutor" />
+          </div>
+          <div class="scribble-note note-right">See you<br />in class! ♡</div>
+          <div class="teacher-badge"><strong>Di</strong><span>Your English tutor <b></b></span></div>
+          <div class="sparkle sparkle-one">╱╲</div>
+          <div class="sparkle sparkle-two">✦</div>
+        </div>
       </div>
     </section>
 
-    <!-- MAIN CONTENT -->
-    <main class="wrapper">
-      <!-- ABOUT -->
-      <section id="about" class="section" aria-labelledby="about-title">
-        <h2 id="about-title">About me</h2>
-        <p>
-          Hi! I’m Di — an online English tutor. I work with students from A1 to
-          C1 and help them speak confidently.
-        </p>
-      </section>
-
-      <!-- FORMATS -->
-      <section id="formats" class="section" aria-labelledby="formats-title">
-        <h2 id="formats-title">Lesson formats</h2>
-
-        <article class="format-card">
-          <h3>Individual lessons</h3>
-          <p>Personal plan, flexible schedule, full attention.</p>
-        </article>
-
-        <article class="format-card">
-          <h3>Group lessons</h3>
-          <p>Small groups, speaking practice, friendly atmosphere.</p>
-        </article>
-      </section>
-
-      <!-- PROCESS -->
-      <section class="section" aria-labelledby="process-title">
-        <h2 id="process-title">How it works</h2>
-        <ol>
-          <li>Free intro lesson</li>
-          <li>Level assessment</li>
-          <li>Personal study plan</li>
-          <li>Regular lessons & feedback</li>
-        </ol>
-      </section>
-
-      <!-- REVIEWS -->
-      <section id="reviews" class="section" aria-labelledby="reviews-title">
-        <h2 id="reviews-title">Student reviews</h2>
-
-        <article class="review">
-          <p>“I started speaking confidently after 2 months.”</p>
-          <span>— Maria, B1</span>
-        </article>
-      </section>
-
-      <!-- CONTACT -->
-      <section
-        id="contact"
-        class="section contact-section"
-        aria-labelledby="contact-title"
-      >
-        <div class="contact-box">
-          <h2 id="contact-title">Book a lesson</h2>
-
-          <form class="contact-form" novalidate>
-            <label>
-              Name
-              <input type="text" name="name" required />
-            </label>
-
-            <label>
-              Level
-              <select name="level" required>
-                <option value="">Choose level</option>
-                <option>A1</option>
-                <option>A2</option>
-                <option>B1</option>
-                <option>B2</option>
-                <option>C1</option>
-              </select>
-            </label>
-
-            <label>
-              Contact (Telegram / Email)
-              <input type="text" name="contact" required />
-            </label>
-
-            <button class="btn submit-btn" type="submit">Send request</button>
-          </form>
-        </div>
-      </section>
-    </main>
-
-    <!-- FOOTER -->
-    <footer class="site-footer">
+    <!-- ABOUT -->
+    <section id="about" class="section about-section">
       <div class="wrapper">
-        <address aria-label="Contacts">
-          <a href="mailto:english@example.com">english@example.com</a>
-          <a href="https://t.me/username">Telegram</a>
-          <a href="#">Instagram</a>
-          <a href="#">TikTok</a>
-        </address>
+        <div class="about-card reveal">
+          <div class="about-photo-wrap">
+            <img src="teacher-placeholder.jpg" alt="Di teaching English" />
+            <div class="scribble-note photo-note">More<br />than just<br />English ♡</div>
+          </div>
+          <div class="about-content">
+            <span class="section-tag">✦ ABOUT ME</span>
+            <h2>Hi! I’m Di. <span>👋</span></h2>
+            <p class="about-intro">I’m an online English tutor. I work with students from A1 to C1 and help them build real communication skills, gain confidence and use English in everyday life — at work, while traveling or just in conversations.</p>
 
-        <p>© 2026 Online English Tutor</p>
+            <div class="benefits-grid">
+              <article class="benefit-card">
+                <span class="benefit-icon red">◎</span>
+                <h3>Personal approach</h3>
+                <p>Lessons adapted to your goals and interests.</p>
+              </article>
+              <article class="benefit-card">
+                <span class="benefit-icon blue">▣</span>
+                <h3>Speaking first</h3>
+                <p>More real communication and practical English.</p>
+              </article>
+              <article class="benefit-card">
+                <span class="benefit-icon purple">▥</span>
+                <h3>Clear progress</h3>
+                <p>You’ll always see what you’re improving.</p>
+              </article>
+            </div>
+          </div>
+          <div class="decor decor-about">╱╲<br />╲╱</div>
+        </div>
       </div>
-    </footer>
-<!-- MODAL -->
-<div class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-  <div class="modal-overlay" data-close></div>
+    </section>
 
-  <div class="modal-content">
-    <button class="modal-close" data-close>✕</button>
+    <!-- FORMATS -->
+    <section id="formats" class="section plain-section">
+      <div class="wrapper">
+        <div class="section-heading reveal">
+          <span class="section-tag">✦ LESSON FORMATS</span>
+          <h2>Choose what fits you</h2>
+          <p>Different goals. Same supportive approach. ♡</p>
+        </div>
 
-    <h2 id="modal-title">Book a lesson</h2>
+        <div class="format-grid">
+          <article class="format-card individual reveal">
+            <div class="format-copy">
+              <span class="format-icon">♙</span>
+              <h3>Individual lessons</h3>
+              <p>For students who want maximum personal attention.</p>
+              <ul>
+                <li>Personal study plan</li>
+                <li>Flexible schedule</li>
+                <li>Focus on your goals</li>
+                <li>Detailed feedback</li>
+              </ul>
+              <button class="btn primary-btn open-booking" data-lesson-type="Individual lesson" type="button">Book individual lesson <span>→</span></button>
+            </div>
+            <div class="format-art individual-art" aria-hidden="true"><span>Good<br />English<br />Mood ☕</span></div>
+          </article>
 
-    <form class="contact-form" novalidate>
-      <label>
-        Name
-        <input type="text" name="name" required />
-      </label>
+          <article class="format-card group reveal delay-1">
+            <div class="format-copy">
+              <span class="format-icon orange">♧</span>
+              <h3>Group lessons</h3>
+              <p>Learn with other people and get more speaking practice.</p>
+              <ul>
+                <li>Small groups (3–6 students)</li>
+                <li>Friendly atmosphere</li>
+                <li>Interactive tasks</li>
+                <li>Real-life communication</li>
+              </ul>
+              <button class="btn light-btn open-booking" data-lesson-type="Group lesson" type="button">Join a group <span>→</span></button>
+            </div>
+            <div class="format-art group-art" aria-hidden="true"><span>Good<br />People<br />Better<br />English ☺</span></div>
+          </article>
+        </div>
+      </div>
+    </section>
 
-      <label>
-        Level
-        <select name="level" required>
-          <option value="">Choose level</option>
-          <option>A1</option>
-          <option>A2</option>
-          <option>B1</option>
-          <option>B2</option>
-          <option>C1</option>
-        </select>
-      </label>
+    <!-- GOALS -->
+    <section class="section plain-section goals-section">
+      <div class="wrapper">
+        <div class="section-heading reveal">
+          <span class="section-tag">✦ WHAT CAN WE WORK ON?</span>
+          <h2>Achieve your English goals</h2>
+        </div>
+        <div class="goals-grid">
+          <article class="goal-card"><span class="goal-icon purple">♬</span><strong>Speaking</strong></article>
+          <article class="goal-card"><span class="goal-icon blue">◉</span><strong>Listening</strong></article>
+          <article class="goal-card"><span class="goal-icon red">▣</span><strong>Grammar</strong></article>
+          <article class="goal-card"><span class="goal-icon purple">✎</span><strong>Writing</strong></article>
+          <article class="goal-card"><span class="goal-icon green">▣</span><strong>Business<br />English</strong></article>
+          <article class="goal-card"><span class="goal-icon blue">▤</span><strong>Exams<br /><small>(IELTS, etc.)</small></strong></article>
+          <article class="goal-card"><span class="goal-icon pink">▱</span><strong>Everyday<br />communication</strong></article>
+        </div>
+      </div>
+    </section>
 
-      <label>
-        Contact (Telegram / Email)
-        <input type="text" name="contact" required />
-      </label>
+    <!-- HOW IT WORKS -->
+    <section class="section plain-section process-section">
+      <div class="wrapper">
+        <div class="section-heading reveal">
+          <span class="section-tag">✦ HOW IT WORKS</span>
+          <h2>Simple steps to get started</h2>
+        </div>
 
-      <button class="btn primary-btn" type="submit">Send request</button>
-    </form>
+        <div class="steps">
+          <article class="step reveal"><span class="step-number">01</span><h3>Free intro lesson</h3><p>We get to know each other and discuss your goals.</p></article>
+          <article class="step reveal delay-1"><span class="step-number">02</span><h3>Level assessment</h3><p>I find your current level and learning needs.</p></article>
+          <article class="step reveal delay-2"><span class="step-number">03</span><h3>Personal study plan</h3><p>We create a plan that works for you.</p></article>
+          <article class="step reveal delay-3"><span class="step-number">04</span><h3>Regular lessons & feedback</h3><p>You learn, practice and see real progress.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <!-- REVIEWS -->
+    <section id="reviews" class="section plain-section reviews-section">
+      <div class="wrapper reviews-layout">
+        <div class="reviews-intro reveal">
+          <span class="section-tag">✦ STUDENT REVIEWS</span>
+          <h2>Real stories,<br />real progress</h2>
+          <a href="#contact">See more reviews →</a>
+        </div>
+        <div class="reviews-grid">
+          <article class="review-card reveal"><div class="stars">★★★★★</div><p>“I started speaking confidently after 2 months. Lessons are fun and well-structured!”</p><span>— Maria, B1</span></article>
+          <article class="review-card reveal delay-1"><div class="stars">★★★★★</div><p>“Di explains everything so clearly. I feel much more confident in conversations now.”</p><span>— Alex, A2</span></article>
+          <article class="review-card reveal delay-2"><div class="stars">★★★★★</div><p>“Great atmosphere, interesting topics and real progress. Highly recommend!”</p><span>— Kate, B2</span></article>
+        </div>
+        <div class="scribble-success">Your success<br />makes my day! ♡</div>
+      </div>
+    </section>
+
+    <!-- BOOKING -->
+    <section id="contact" class="section booking-section">
+      <div class="wrapper">
+        <div class="booking-card reveal">
+          <div class="booking-copy">
+            <span class="section-tag">✦ BOOK A LESSON</span>
+            <h2>Let’s start your English journey</h2>
+            <p>Fill in the form and I’ll get back to you as soon as possible.</p>
+          </div>
+          <form class="contact-form booking-form" novalidate>
+            <label>Name<input type="text" name="name" placeholder="Your name" required /></label>
+            <label>Level<select name="level" required><option value="">Choose level</option><option>A1</option><option>A2</option><option>B1</option><option>B2</option><option>C1</option></select></label>
+            <label>Contact (Telegram / Email)<input type="text" name="contact" placeholder="Your contact" required /></label>
+            <input type="hidden" name="request_type" value="Not specified" />
+            <button class="btn primary-btn submit-btn" type="submit">Send request <span>→</span></button>
+          </form>
+          <div class="scribble-contact">Can’t wait<br />to meet you! ♡</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrapper footer-inner">
+      <div class="footer-brand"><strong>English with Di</strong><span>© 2026 Online English Tutor<br />All rights reserved.</span></div>
+      <address aria-label="Contacts">
+        <a href="mailto:english@example.com">english@example.com</a>
+        <a href="https://t.me/username" target="_blank" rel="noopener">Telegram</a>
+        <a href="#">Instagram</a>
+        <a href="#">TikTok</a>
+      </address>
+      <div class="footer-socials" aria-hidden="true"><span>✈</span><span>◎</span><span>♪</span></div>
+    </div>
+  </footer>
+
+  <!-- BOOKING MODAL -->
+  <div class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-overlay" data-close></div>
+    <div class="modal-content">
+      <button class="modal-close" data-close aria-label="Close">✕</button>
+      <span class="section-tag">✦ BOOK A LESSON</span>
+      <h2 id="modal-title">Let’s get started</h2>
+      <p class="modal-subtitle">Tell me a little about yourself and I’ll contact you soon.</p>
+      <div class="selected-format" id="selected-format">Lesson format: <strong>Not specified</strong></div>
+      <form class="contact-form" novalidate>
+        <label>Name<input type="text" name="name" placeholder="Your name" required /></label>
+        <label>Level<select name="level" required><option value="">Choose level</option><option>A1</option><option>A2</option><option>B1</option><option>B2</option><option>C1</option></select></label>
+        <label>Contact (Telegram / Email)<input type="text" name="contact" placeholder="Your contact" required /></label>
+        <button class="btn primary-btn" type="submit">Send request <span>→</span></button>
+      </form>
+    </div>
   </div>
-</div>
 
-    <!-- JS -->
-    <script src="modal.js" defer></script>
-    <script src="form.js" defer></script>
-    <script src="menu.js" defer></script>
-  </body>
+  <!-- SUCCESS MESSAGE -->
+  <div class="success-modal hidden" id="successModal" role="dialog" aria-modal="true" aria-labelledby="success-title">
+    <div class="success-overlay" data-success-close></div>
+    <div class="success-content">
+      <button class="success-close" type="button" data-success-close aria-label="Close">✕</button>
+      <div class="success-check">✓</div>
+      <span class="section-tag">✦ REQUEST SENT</span>
+      <h2 id="success-title">Thank you! 💜</h2>
+      <p>Your request has been sent successfully. Di will get back to you as soon as possible.</p>
+      <button class="btn primary-btn" type="button" data-success-close>Perfect, thanks! <span>→</span></button>
+    </div>
+  </div>
+
+  <script src="modal.js" defer></script>
+  <script src="form.js" defer></script>
+  <script src="menu.js" defer></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const items = document.querySelectorAll('.reveal');
+      if (!('IntersectionObserver' in window)) { items.forEach(el => el.classList.add('visible')); return; }
+      const observer = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); obs.unobserve(entry.target); } });
+      }, { threshold: 0.12 });
+      items.forEach(el => observer.observe(el));
+    });
+  </script>
+</body>
 </html>

@@ -3,6 +3,7 @@ const STUDENTS_SHEET = "students";
 const STUDENT_INFO_SHEET = "students_info";
 const REQUESTS_SHEET = "requests";
 const REPLIES_SHEET = "teacher_messages";
+const APP_TIME_ZONE = "Europe/Kyiv";
 
 function doGet(e) {
   return handleRequest_(e && e.parameter ? e.parameter : {});
@@ -42,7 +43,7 @@ function handleRequest_(data) {
         break;
       case "admin_create_request":
         requireAdmin_(data);
-        result = appendRequest_(data.student_id, data.message);
+        result = appendRequest_(data.student_id, data.message, data.request_type, data.request_date);
         break;
       default:
         throw new Error("Unknown action");
@@ -116,7 +117,7 @@ function readRecords_(sheet) {
 
 function formatCell_(header, value) {
   if (value instanceof Date) {
-    const timeZone = Session.getScriptTimeZone();
+    const timeZone = APP_TIME_ZONE;
     if (header === "date" || header === "paid_until") {
       return Utilities.formatDate(value, timeZone, "yyyy-MM-dd");
     }
@@ -158,37 +159,82 @@ function getStudentReplies_(data) {
 
 function createStudentMessage_(data) {
   const student = getStudent_(data.student_id, data.token);
-  return appendRequest_(student.id, data.message);
+  return appendRequest_(student.id, data.message, "Student message", "");
 }
 
 function createBooking_(data) {
   const name = String(data.name || "").trim();
   const level = String(data.level || "").trim();
   const contact = String(data.contact || "").trim();
+  const requestType = String(data.request_type || "Not specified").trim() || "Not specified";
+
   if (name.length < 2 || !level || contact.length < 3) {
     throw new Error("Fill in all booking fields");
   }
-  return appendRequest_(`Booking: ${name}`, `Level: ${level}; Contact: ${contact}`);
+
+  const allowedTypes = ["Individual lesson", "Group lesson", "Not specified"];
+  if (!allowedTypes.includes(requestType)) {
+    throw new Error("Invalid lesson format");
+  }
+
+  return appendRequest_(
+    `Booking: ${name}`,
+    `Level: ${level}; Contact: ${contact}; Format: ${requestType}`,
+    requestType,
+    ""
+  );
 }
 
-function appendRequest_(studentId, message) {
+function ensureRequestColumns_(sheet) {
+  const requiredColumns = ["student_id", "message", "created_at", "status", "request_id", "request_type", "request_date"];
+  const headers = sheet.getRange(1, 1, 1, Math.max(sheet.getLastColumn(), 1)).getDisplayValues()[0];
+
+  requiredColumns.forEach((header) => {
+    if (headers.indexOf(header) === -1) {
+      sheet.getRange(1, sheet.getLastColumn() + 1).setValue(header);
+      headers.push(header);
+    }
+  });
+}
+
+function appendRequest_(studentId, message, requestType, requestDate) {
   const cleanStudentId = String(studentId || "").trim();
   const cleanMessage = String(message || "").trim();
+  const cleanType = String(requestType || "").trim();
+  const cleanDate = String(requestDate || "").trim();
+
   if (!cleanStudentId || !cleanMessage || cleanMessage.length > 2000) {
     throw new Error("A valid student id and message are required");
+  }
+  if (cleanDate && !/^\d{4}-\d{2}-\d{2}$/.test(cleanDate)) {
+    throw new Error("Request date must be in YYYY-MM-DD format");
   }
 
   const lock = LockService.getScriptLock();
   lock.waitLock(10000);
   try {
     const sheet = getRequestsSheet_();
-    sheet.appendRow([
-      cleanStudentId,
-      cleanMessage,
-      new Date().toISOString(),
-      "new",
-      Utilities.getUuid(),
-    ]);
+    ensureRequestColumns_(sheet);
+    const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getDisplayValues()[0];
+    const row = new Array(headers.length).fill("");
+
+    const values = {
+      student_id: cleanStudentId,
+      message: cleanMessage,
+      created_at: Utilities.formatDate(new Date(), APP_TIME_ZONE, "yyyy-MM-dd HH:mm:ss"),
+      status: "new",
+      request_id: Utilities.getUuid(),
+      request_type: cleanType,
+      request_date: cleanDate,
+    };
+
+    headers.forEach((header, index) => {
+      if (Object.prototype.hasOwnProperty.call(values, header)) {
+        row[index] = values[header];
+      }
+    });
+
+    sheet.appendRow(row);
   } finally {
     lock.releaseLock();
   }
@@ -203,13 +249,18 @@ function resolveRequest_(data) {
   lock.waitLock(10000);
   try {
     const sheet = getRequestsSheet_();
+    ensureRequestColumns_(sheet);
     const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getDisplayValues()[0];
     const idColumn = headers.indexOf("request_id") + 1;
+    const statusColumn = headers.indexOf("status") + 1;
     const rowCount = sheet.getLastRow() - 1;
+    if (rowCount < 1) throw new Error("Request not found");
+
     const ids = sheet.getRange(2, idColumn, rowCount, 1).getDisplayValues();
     const index = ids.findIndex((row) => row[0] === requestId);
     if (index === -1) throw new Error("Request not found");
-    sheet.deleteRow(index + 2);
+
+    sheet.getRange(index + 2, statusColumn).setValue("resolved");
   } finally {
     lock.releaseLock();
   }
@@ -225,7 +276,7 @@ function sendTeacherReply_(data) {
     Utilities.getUuid(),
     student.id,
     message,
-    new Date().toISOString(),
+    Utilities.formatDate(new Date(), APP_TIME_ZONE, "yyyy-MM-dd HH:mm:ss"),
   ]);
   return {};
 }

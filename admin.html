@@ -13,7 +13,7 @@
   </head>
 
   <body>
-    <!-- LOGIN SCREEN -->
+    <!-- LOGIN -->
     <main id="loginScreen" class="login-screen">
       <div class="login-card">
         <div class="login-icon">🔐</div>
@@ -41,6 +41,7 @@
         <h1>Di — Admin dashboard</h1>
         <button id="changeAdminKey" type="button" class="secondary-btn">Change key</button>
       </div>
+
       <p id="adminStatus" class="admin-status" role="status"></p>
 
       <!-- REQUESTS -->
@@ -49,10 +50,12 @@
 
         <div class="form-row">
           <input id="reqStudent" placeholder="Student name / id" />
+
           <select id="reqType">
             <option value="Reschedule">Reschedule</option>
             <option value="Cancel">Cancel</option>
           </select>
+
           <input id="reqDate" type="date" />
           <input id="reqComment" placeholder="Comment (optional)" />
           <button id="addRequest" type="button">Add</button>
@@ -63,23 +66,30 @@
             <thead>
               <tr>
                 <th>Student</th>
+                <th>Type</th>
+                <th>Requested date</th>
                 <th>Message</th>
-                <th>Date</th>
+                <th>Created</th>
                 <th>Status</th>
                 <th></th>
               </tr>
             </thead>
-
             <tbody id="requestsTable"></tbody>
           </table>
         </div>
       </section>
 
+      <!-- REPLY -->
       <section class="card">
         <h2>Reply to a student</h2>
+
         <div class="form-row">
           <input id="replyStudent" placeholder="Student id" />
-          <textarea id="replyMessage" placeholder="Your message to the student" rows="3"></textarea>
+          <textarea
+            id="replyMessage"
+            placeholder="Your message to the student"
+            rows="3"
+          ></textarea>
           <button id="sendReply" type="button">Send reply</button>
         </div>
       </section>
