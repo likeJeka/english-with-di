@@ -11,15 +11,15 @@ const loginButton = document.getElementById("loginButton");
 const loginError = document.getElementById("loginError");
 
 function getStoredAdminKey() {
-  return sessionStorage.getItem(STORAGE_KEY);
+  return localStorage.getItem(STORAGE_KEY);
 }
 
 function saveAdminKey(key) {
-  sessionStorage.setItem(STORAGE_KEY, key);
+  localStorage.setItem(STORAGE_KEY, key);
 }
 
 function clearAdminKey() {
-  sessionStorage.removeItem(STORAGE_KEY);
+  localStorage.removeItem(STORAGE_KEY);
 }
 
 function showLogin(errorMessage = "") {
@@ -325,8 +325,19 @@ async function initAdmin() {
     return;
   }
 
-  const success = await login(storedKey);
-  if (!success) clearAdminKey();
+  // Ключ уже сохранён — сразу открываем dashboard
+  showDashboard();
+
+  document.getElementById("adminStatus").textContent = "Loading...";
+
+  try {
+    const result = await adminRequest("admin_requests");
+
+    document.getElementById("adminStatus").textContent = "";
+    renderRequests(result.requests || []);
+  } catch (error) {
+    console.error("Initial admin load error:", error);
+  }
 }
 
 initAdmin();
